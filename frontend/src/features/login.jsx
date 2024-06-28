@@ -19,6 +19,32 @@ export function Login() {
 
     const { loginForm } = loginState;
 
+    // event handlers
+    const _onTextFieldChange = (field, ev) => {
+        // userState[field] = ev.target.value;
+        // console.log(userState);
+
+        setUserState({
+            ...userState,
+            [field]: ev.target.value
+        })
+    };
+
+    const _onFormTypeChange = (formType) => {
+        setLoginState({
+            loginForm: formType
+        });
+        
+        // reset form
+        setUserState({
+            username: "",
+            password: "",
+            useremail: ""
+        });
+    };
+
+    // rendering methods
+
     // login form
     const _renderLoginForm = () => {
         return (
@@ -29,31 +55,15 @@ export function Login() {
                 </div>
                 <div className="useremail">
                     <h4>Useremail</h4>
-                    <TextField variant="outlined" label="Username" value={userState.username}/>
+                    <TextField variant="outlined" label="Useremail" value={userState.useremail}  onChange={(ev) => _onTextFieldChange("useremail", ev)} />
                 </div>
                 <div className="password">
-                    <h4>Passowrd</h4>
-                    <TextField variant="outlined" label="Password" value={userState.password} type="password" />
+                    <h4>Password</h4>
+                    <TextField variant="outlined" label="Password" value={userState.password} type="password" onChange={(ev) => _onTextFieldChange("password", ev)} />
                 </div>
             </>
-        )
-    };
-
-    const _renderSignUpElOnLoginPage = () => {
-        if (loginForm === "login") {
-            return (
-                <div className='signup-login-link'>
-                    No account? <Button onClick={() => setLoginState({loginForm: "signup"})}>Sign Up</Button>  
-                </div>
-            )
-        }
-
-        return (
-            <div className='signup-login-link'>
-                Already have account? <Button onClick={() => setLoginState({loginForm: "login"})}>Log In</Button>  
-            </div>
         );
-    }
+    };
 
     // sign up form
     const _renderSignUpForm = () => {
@@ -65,19 +75,35 @@ export function Login() {
                 </div>
                 <div className="username">
                     <h4>Name</h4>
-                    <TextField variant="outlined" label="Name" value={userState.username}/>
+                    <TextField variant="outlined" label="Name" value={userState.username} onChange={(ev) => _onTextFieldChange("username", ev)} />
                 </div>
                 <div className="useremail">
                     <h4>Email</h4>
-                    <TextField variant="outlined" label="Email" value={userState.username}/>
+                    <TextField variant="outlined" label="Email" value={userState.useremail} onChange={(ev) => _onTextFieldChange("useremail", ev)} />
                 </div>
                 <div className="password">
-                    <h4>Passowrd</h4>
-                    <TextField variant="outlined" label="Password" value={userState.password} type="password" />
+                    <h4>Password</h4>
+                    <TextField variant="outlined" label="Password" value={userState.password} type="password"  onChange={(ev) => _onTextFieldChange("password", ev)} />
                 </div>
             </>
-        )
-    }
+        );
+    };
+
+    const _renderSignUpElOnLoginPage = () => {
+        if (loginForm === "login") {
+            return (
+                <div className='signup-login-link'>
+                    No account? <Button onClick={() => _onFormTypeChange("signup")}>Sign Up</Button>  
+                </div>
+            );
+        }
+
+        return (
+            <div className='signup-login-link'>
+                Already have account? <Button onClick={() => _onFormTypeChange("login")}>Log In</Button>  
+            </div>
+        );
+    };
 
     const formEl = loginForm === "login" ? _renderLoginForm() : _renderSignUpForm();
     const btnText = loginForm === "login" ? "Login" : "SignUp";
