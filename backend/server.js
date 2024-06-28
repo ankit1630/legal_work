@@ -10,7 +10,7 @@ app.use(express.json())
 app.use(bodyParser.urlencoded({ extended: true}));
 app.use(bodyParser.json({ extended: true}));
 
-// routes
+// login routes
 app.use("/api/login", loginRoutes);
 
 // not matched with any routes, send 404
