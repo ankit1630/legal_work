@@ -1,8 +1,10 @@
-const express = require('express');
+const express = require("express");
+const jwt = require("jsonwebtoken");
+const bcrypt = require("bcrypt");
 const router = express.Router();
 
 // DAO
-const DAO = require('./../db/sqlite');
+const DAO = require("./../db/sqlite");
 const dao = new DAO();
 
 const CREATE_USER_TABLE = `
@@ -24,7 +26,26 @@ router.get("/", (req, res) => {
 });
 
 router.post("/signup", (req, res) => {
-  res.send("hitting route signupp")
+  const { username, useremail, password } = req.body;
+
+  // First, need to hash the password for security
+  const hashedPassword = bcrypt.hashSync(password, 10);
+  dao
+    .run(`INSERT INTO USER_TABLE (email, name, password) VALUES (?, ?, ?)`, [
+      useremail,
+      username,
+      hashedPassword,
+    ])
+    .then((result) => {
+      const token = jwt.sign(req.body, "LOGIN_SECRET", {
+        expiresIn: 86400, // expires in 24 hours
+      });
+      res.status(200).send({ auth: true, token: token, result });
+    })
+    .catch((err) => {
+      console.log(err)
+      res.status(500).send("There was a problem registering the user.");
+    });
 });
 
 module.exports = router;
