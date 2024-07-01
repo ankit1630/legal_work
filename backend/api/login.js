@@ -15,8 +15,17 @@ CREATE TABLE IF NOT EXISTS USER_TABLE (
 );
 `;
 
+const CREATE_COLLECTION_TABLE = `
+CREATE TABLE IF NOT EXISTS COLLECTIONS (
+ id TEXT PRIMARY KEY,
+ name TEXT NOT NULL,
+ createdBy TEXT NOT NULL
+);
+`;
+
 // creating table, ONE TIME
 dao.createTable(CREATE_USER_TABLE);
+dao.createTable(CREATE_COLLECTION_TABLE);
 
 //verify token
 const verifyToken = (token) => {
@@ -41,20 +50,16 @@ const verifyToken = (token) => {
 router.get("/", (req, res) => {
   const { useremail, password, token } = req.query;
 
-  if (!token || !verifyToken(token)) {
-    res.status(400).send({error_msg: 'Invalid session/token. Login Again!!'});
-  }
-  console.log("vaid token");
   dao.get(`SELECT * FROM USER_TABLE WHERE email=?`, [useremail])
   .then((result) => {
     if (result.length > 1) {
-      return res.status(400).send('Invalid username or password')
+      return res.status(400).send({error_msg: 'Invalid username or password'})
     }
 
     const userInfo = result[0];
     const isPasswordCorrect = bcrypt.compareSync(password, userInfo.password);
 
-    if (!isPasswordCorrect) return res.status(400).send('Invalid username or password');
+    if (!isPasswordCorrect) return res.status(400).send({error_msg: 'Invalid username or password'});
     
     const token = jwt.sign({ username: userInfo.username, useremail, password }, 'LOGIN_SECRET', {
         expiresIn: 86400 // expires in 24 hours
@@ -62,8 +67,7 @@ router.get("/", (req, res) => {
     res.status(200).send({ auth: true, token: token, username: userInfo.name, useremail });
   })
   .catch((err) => {
-    console.log(err);
-    return res.status(400).send('Invalid username or password')
+    return res.status(400).send({error_msg: 'Invalid username or password'})
   });
 });
 
@@ -88,8 +92,7 @@ router.post("/signup", (req, res) => {
       res.status(200).send({ auth: true, token: token, result });
     })
     .catch((err) => {
-      console.log(err)
-      res.status(500).send("There was a problem registering the user.");
+      res.status(500).send({error_msg: "There was a problem registering the user."});
     });
 });
 

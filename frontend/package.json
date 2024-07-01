@@ -2,7 +2,7 @@
   "name": "rag-ui-with-qdrant",
   "version": "0.1.0",
   "private": true,
-  "proxy": "http://13.49.73.241:5000",
+  "proxy": "http://localhost:3001",
   "dependencies": {
     "@emotion/react": "^11.11.4",
     "@emotion/styled": "^11.11.0",
