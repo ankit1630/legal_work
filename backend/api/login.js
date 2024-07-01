@@ -18,13 +18,58 @@ CREATE TABLE IF NOT EXISTS USER_TABLE (
 // creating table, ONE TIME
 dao.createTable(CREATE_USER_TABLE);
 
+//verify token
+const verifyToken = (token) => {
+  try {
+    jwt.verify(token, 'LOGIN_SECRET');
+    return true;  // Token is valid and not expired
+  } catch(error) {
+    if(error instanceof jwt.TokenExpiredError) {
+      // The token is expired
+      console.log('Token expired');
+    } else if(error instanceof jwt.JsonWebTokenError){
+      // invalid token
+      console.log('Invalid token');
+    }
+    return false;
+  }
+}
+
 /**
  * Login user
  */
 router.get("/", (req, res) => {
-  return res.send("Hello World");
+  const { useremail, password, token } = req.query;
+
+  if (!token || !verifyToken(token)) {
+    res.status(400).send({error_msg: 'Invalid session/token. Login Again!!'});
+  }
+  console.log("vaid token");
+  dao.get(`SELECT * FROM USER_TABLE WHERE email=?`, [useremail])
+  .then((result) => {
+    if (result.length > 1) {
+      return res.status(400).send('Invalid username or password')
+    }
+
+    const userInfo = result[0];
+    const isPasswordCorrect = bcrypt.compareSync(password, userInfo.password);
+
+    if (!isPasswordCorrect) return res.status(400).send('Invalid username or password');
+    
+    const token = jwt.sign({ username: userInfo.username, useremail, password }, 'LOGIN_SECRET', {
+        expiresIn: 86400 // expires in 24 hours
+    });
+    res.status(200).send({ auth: true, token: token, username: userInfo.name, useremail });
+  })
+  .catch((err) => {
+    console.log(err);
+    return res.status(400).send('Invalid username or password')
+  });
 });
 
+/**
+ * Sign up user
+ */
 router.post("/signup", (req, res) => {
   const { username, useremail, password } = req.body;
 
