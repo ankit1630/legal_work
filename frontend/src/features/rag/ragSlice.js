@@ -10,9 +10,6 @@ export const ragSlice = createSlice({
   name: 'rag',
   initialState,
   reducers: {
-    changeModel: (state, action) => {
-        state.model = action.payload.model;
-    },
     updateCollections: (state, action) => {
         state.collections = action.payload;
     },
@@ -27,9 +24,8 @@ export const ragSlice = createSlice({
   },
 });
 
-export const { changeModel, onSelectCollection, onCreateCollection, updateCollections } = ragSlice.actions;
+export const { onSelectCollection, onCreateCollection, updateCollections } = ragSlice.actions;
 
-export const selectModel = (state) => state.rag.model;
 export const selectCollectionOptions = (state) => state.rag.collections;
 export const selectSelectedCollection = (state) => state.rag.selectedCollection;
 

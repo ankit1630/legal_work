@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 
 import { useSelector, useDispatch } from 'react-redux';
-import { selectModel, selectSelectedCollection } from './ragSlice';
+import { selectSelectedCollection } from './ragSlice';
 
 import Card from '@mui/material/Card';
 import CardHeader from '@mui/material/CardHeader';

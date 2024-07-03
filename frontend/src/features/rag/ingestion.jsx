@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 
 import { useSelector, useDispatch } from 'react-redux';
-import { selectModel, selectSelectedCollection } from './ragSlice';
+import { selectSelectedCollection } from './ragSlice';
+import { selectModel } from './modelSlice';
 
 import axios from 'axios';
 import Card from '@mui/material/Card';

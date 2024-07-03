@@ -1,0 +1,38 @@
+.appbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px;
+    background-color: purple;
+    color: white;
+}
+
+.appbar-popover {
+    width: 200px;
+    padding: 12px;
+}
+
+.appbar-userinfo {
+    display: flex;
+    align-items: center;
+    padding: 12px;
+    border-bottom: 1px dashed black;
+}
+
+.appbar-userinfo-userdetail {
+    margin-left: 20px;
+}
+
+.avatar {
+    border-radius: 50%;
+    height: 30px;
+}
+
+.avatar-popover {
+    border-radius: 50%;
+    width: 50px;
+}
+
+.appbar-logout {
+    width: 100%;
+}

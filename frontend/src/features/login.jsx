@@ -65,7 +65,8 @@ export function Login(props) {
             })
             .then((response) => {
                 const {token, username, useremail} = response.data;
-                props.onUserLogin(token, username, useremail)
+                props.onUserLogin(token, username, useremail);
+                _onFormTypeChange("login");
             })
             .catch((error) => {
                 setLoginState({
@@ -81,7 +82,8 @@ export function Login(props) {
                 password
             })
             .then((response) => {
-                props.onUserLogin(response.data.token, username, useremail)
+                props.onUserLogin(response.data.token, username, useremail);
+                _onFormTypeChange("login");
             })
             .catch((error) => {
                 setLoginState({

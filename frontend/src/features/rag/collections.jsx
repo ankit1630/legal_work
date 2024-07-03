@@ -3,7 +3,8 @@ import React, { useEffect, useState } from 'react';
 
 import { useSelector, useDispatch } from 'react-redux';
 import axios from 'axios';
-import { selectSelectedCollection, onSelectCollection, onCreateCollection, updateCollections, selectCollectionOptions, changeModel } from './ragSlice';
+import { selectSelectedCollection, onSelectCollection, onCreateCollection, updateCollections, selectCollectionOptions } from './ragSlice';
+import { changeModel } from './modelSlice';
 
 import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';

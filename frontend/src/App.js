@@ -1,6 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import './App.css';
 import { Login } from './features/login';
+import { AppBar } from './features/appBar';
+import { Rag } from './features/rag/rag';
+import { Provider } from 'react-redux';
+import { store } from './app/store';
 
 function App() {
   const [appState, setAppState] = useState({
@@ -49,10 +53,34 @@ function App() {
         email: useremail
       }
     });
-  }
+  };
+
+  const _handleUserLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("userInfo");
+
+    setAppState({
+      isUserLoggedIn: false,
+      userInfo: {
+        name: "",
+        email: ""
+      }
+    })
+  };
+
+  const _renderDashboard = () => {
+    return (
+      <div className='app-dashboard'>
+        <AppBar userInfo={appState.userInfo} onUserLogout={_handleUserLogout}/>
+        <Provider store={store}>
+          <Rag className="app-body" />
+        </Provider>
+      </div>
+    )
+  };
 
   const { isUserLoggedIn } = appState;
-  const componentToRender = isUserLoggedIn ? <p>User {appState.userInfo.name} is logged in!!</p> : <Login onUserLogin={_handleUserLogin} />
+  const componentToRender = isUserLoggedIn ? _renderDashboard() : <Login onUserLogin={_handleUserLogin} />
 
   if (!compIsReady) return null;
 
