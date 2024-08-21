@@ -14,6 +14,7 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import DeleteIcon from '@mui/icons-material/Delete';
+import { Card, CardContent, Typography } from "@mui/material";
 
 import './styles/collections.css';
 
@@ -42,9 +43,7 @@ export const Collections = (props) => {
             } catch (error) {
                 console.error("error in fetching collection", error);
                 // setFetchingCollectionError(true);
-                dispatch(changeModel({
-                    model: ""
-                }));
+                dispatch(updateCollections(["collection 1", "collection 2"]));
                 setFetchCollectionProgress(false);
             } finally {
                 setFetchCollectionProgress(false);
@@ -93,10 +92,11 @@ export const Collections = (props) => {
         // New collection -> New_Collection
         // xhr for creating collection
         // axios("https://abc.com/createCollection").then()
-        const response = await axios.post("api/create_collection", {
-            model_type: props.model,
-            collection_name: createCollectionDialog.collectionName
-        });
+        // const response = await axios.post("api/create_collection", {
+        //     model_type: props.model,
+        //     collection_name: createCollectionDialog.collectionName
+        // });
+        console.log( props.model);
         dispatch(onCreateCollection(createCollectionDialog.collectionName  + "_" + props.model.toLowerCase()));
         handleClose();
     }
@@ -115,9 +115,9 @@ export const Collections = (props) => {
 
         const updatedCollections = collectionOptions.filter((collection) => collection !== collectionToDelete);
 
-        const response = await axios.post("api/delete_collection", {
-            collection_name: collectionToDelete
-        });
+        // const response = await axios.post("api/delete_collection", {
+        //     collection_name: collectionToDelete
+        // });
 
         dispatch(updateCollections(updatedCollections));
 
@@ -142,55 +142,67 @@ export const Collections = (props) => {
     };
 
     return (
-        <div className='collections-conatainer'>
-            <Autocomplete
-                disablePortal
-                options={collectionOptions}
-                sx={{ width: 300 }}
-                value={selectedCollection}
-                onChange={handleCollectionSelection}
-                inputValue={inputValue}
-                onInputChange={handleInputValueChange}
-                renderInput={(params) => <TextField {...params} label="Collections" />}
-                renderOption={renderCollectionOptions}
-            />
-            <Button 
-                variant="contained" 
-                size="small"
-                onClick={openCreateCollectionDialog}
-            >
-                Create Collection
-            </Button>
-            <Dialog
-                open={createCollectionDialog.open}
-                onClose={handleClose}
-                maxWidth='md'
-            >
-                <DialogTitle>Create Collection</DialogTitle>
-                <DialogContent style={{ width: '600px' }}>
-                    <TextField
-                        autoFocus
-                        required
-                        inputProps={inputprops}
-                        margin="dense"
-                        label="Create collection"
-                        fullWidth
-                        variant="standard"
-                        value={createCollectionDialog.collectionName}
-                        onChange={handleNewCollectionNameChange}
-                    />
-                </DialogContent>
-                <DialogActions>
-                    <Button variant="oulined" onClick={handleClose}>Cancel</Button>
-                    <Button 
-                        variant='contained' 
-                        onClick={handleCreateCollectionBtnClick} 
-                        disabled={!createCollectionDialog.collectionName}
-                    >
-                        Create
-                    </Button>
-                </DialogActions>
-            </Dialog>
+        <div className='collection-section'>
+            <h3>Collections</h3>
+            <Card className="collection-card">
+                <CardContent className="collection-card-content">
+                    <Typography gutterBottom variant="h5" component="div" style={{flexBasis: "30%"}}>
+                        <strong>Select/Manage Collection</strong>
+                    </Typography>
+                    <div className="collections">
+                        <div className="collections-conatainer">
+                            <Autocomplete
+                                disablePortal
+                                options={collectionOptions}
+                                sx={{ width: 300 }}
+                                value={selectedCollection}
+                                onChange={handleCollectionSelection}
+                                inputValue={inputValue}
+                                onInputChange={handleInputValueChange}
+                                renderInput={(params) => <TextField {...params} label="Collections" />}
+                                renderOption={renderCollectionOptions}
+                            />
+                            <Button 
+                                variant="contained" 
+                                size="small"
+                                onClick={openCreateCollectionDialog}
+                            >
+                                Create Collection
+                            </Button>
+                            <Dialog
+                                open={createCollectionDialog.open}
+                                onClose={handleClose}
+                                maxWidth='md'
+                            >
+                                <DialogTitle>Create Collection</DialogTitle>
+                                <DialogContent style={{ width: '600px' }}>
+                                    <TextField
+                                        autoFocus
+                                        required
+                                        inputProps={inputprops}
+                                        margin="dense"
+                                        label="Create collection"
+                                        fullWidth
+                                        variant="standard"
+                                        value={createCollectionDialog.collectionName}
+                                        onChange={handleNewCollectionNameChange}
+                                    />
+                                </DialogContent>
+                                <DialogActions>
+                                    <Button variant="oulined" onClick={handleClose}>Cancel</Button>
+                                    <Button 
+                                        variant='contained' 
+                                        onClick={handleCreateCollectionBtnClick} 
+                                        disabled={!createCollectionDialog.collectionName}
+                                    >
+                                        Create
+                                    </Button>
+                                </DialogActions>
+                            </Dialog>
+                        </div>
+                    </div>
+                </CardContent>
+            </Card>
         </div>
     );
 }

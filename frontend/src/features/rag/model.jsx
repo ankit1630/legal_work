@@ -48,7 +48,7 @@ export const Model = () => {
             <h3>Model Selection</h3>
             <Card className="model-card">
                 <CardContent className="model-card-content">
-                    <Typography gutterBottom variant="h5" component="div">
+                    <Typography gutterBottom variant="h5" component="div"  style={{flexBasis: "30%"}}>
                         <strong>Select a Model</strong>
                     </Typography>
                     <div className="models">
@@ -61,7 +61,7 @@ export const Model = () => {
                             renderInput={(params) => <TextField {...params} label="Models" />}
                         />
                     </div>
-                    {subModelEl}
+                    {/* {subModelEl} */}
                 </CardContent>
             </Card>
         </div>

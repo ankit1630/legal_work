@@ -115,72 +115,75 @@ export const Query = () => {
     const resultEl = resultIsAvailable ? <pre>{JSON.stringify(result, null, 2)}</pre> : "";
 
     return (
-        <Card className='query-container'>
-            <CardHeader className='query-container-header' title="Query" />
-            <CardContent>
-                <div className='query-text'>
-                    <div className="query-text-title">Write your query</div>
-                    <textarea
-                        dir="auto"
-                        className="query-text-box" 
-                        rows={12} 
-                        placeholder='Jot down your query...'
-                        value={queryText}
-                        onChange={onQueryTextChange}
-                    />
-                </div>
-                <div className='query-prompt'>
-                    <div className="query-prompt-title">Prompt</div>
-                    <textarea
-                        dir="auto"
-                        className="query-text-box"
-                        rows={12}
-                        placeholder='Jot down your promt...'
-                        value={queryPrompt}
-                        onChange={onQueryPromptChange}
-                    />
-                </div>
-                <div className='query-source'>
-                    <div className='query-source-cnt'>
-                        <div className="query-source-cnt-title">Source count</div>
-                        <input 
-                            className="query-source-box" 
-                            placeholder='No. of resources' 
-                            value={sourceCount}
-                            onChange={onQuerySourceCntChnage}
+        <div className='query-section'>
+            <h3>Prompts & Query</h3>
+            <Card className='query-container'>
+                <CardHeader className='query-container-header' title="Query" />
+                <CardContent>
+                    <div className='query-text'>
+                        <div className="query-text-title">Write your query</div>
+                        <textarea
+                            dir="auto"
+                            className="query-text-box" 
+                            rows={12} 
+                            placeholder='Jot down your query...'
+                            value={queryText}
+                            onChange={onQueryTextChange}
                         />
                     </div>
-                    <FormControl className='query-source-search-type'>
-                        <InputLabel id="demo-simple-select-label">Search type</InputLabel>
-                        <Select
-                            labelId="demo-simple-select-label"
-                            id="demo-simple-select"
-                            value={searchType}
-                            label="Search type"
-                            onChange={handleSearchTypeChange}
-                        >
-                            <MenuItem value={"similarity"}>Similarity</MenuItem>
-                            <MenuItem value={"mmr"}>MMR</MenuItem>
-                        </Select>
-                    </FormControl>
-                    <FormControlLabel
-                        label="Reset memory"
-                        control={
-                            <Checkbox
-                                checked={resetMemory}
-                                onChange={handleResetMemory}
+                    <div className='query-prompt'>
+                        <div className="query-prompt-title">Prompt</div>
+                        <textarea
+                            dir="auto"
+                            className="query-text-box"
+                            rows={12}
+                            placeholder='Jot down your promt...'
+                            value={queryPrompt}
+                            onChange={onQueryPromptChange}
+                        />
+                    </div>
+                    <div className='query-source'>
+                        <div className='query-source-cnt'>
+                            <div className="query-source-cnt-title">Source count</div>
+                            <input 
+                                className="query-source-box" 
+                                placeholder='No. of resources' 
+                                value={sourceCount}
+                                onChange={onQuerySourceCntChnage}
                             />
-                        }
-                    />
-                </div>
-            </CardContent>
-            <CardActions className='query-action-btns'>
-                <Button variant='contained' disabled={getXhrIsInProgress} onClick={handleGetRelevantDocument}>Get relevant documents</Button>
-                <Button variant='contained' disabled={getXhrIsInProgress} onClick={handleGetAnswer}>Get answer</Button>
-            </CardActions>
-            <CardContent>
-                {resultEl}
-            </CardContent>
-        </Card>
-    )
+                        </div>
+                        <FormControl className='query-source-search-type'>
+                            <InputLabel id="demo-simple-select-label">Search type</InputLabel>
+                            <Select
+                                labelId="demo-simple-select-label"
+                                id="demo-simple-select"
+                                value={searchType}
+                                label="Search type"
+                                onChange={handleSearchTypeChange}
+                            >
+                                <MenuItem value={"similarity"}>Similarity</MenuItem>
+                                <MenuItem value={"mmr"}>MMR</MenuItem>
+                            </Select>
+                        </FormControl>
+                        <FormControlLabel
+                            label="Reset memory"
+                            control={
+                                <Checkbox
+                                    checked={resetMemory}
+                                    onChange={handleResetMemory}
+                                />
+                            }
+                        />
+                    </div>
+                </CardContent>
+                <CardActions className='query-action-btns'>
+                    <Button variant='contained' disabled={getXhrIsInProgress} onClick={handleGetRelevantDocument}>Get relevant documents</Button>
+                    <Button variant='contained' disabled={getXhrIsInProgress} onClick={handleGetAnswer}>Get answer</Button>
+                </CardActions>
+                <CardContent>
+                    {resultEl}
+                </CardContent>
+            </Card>
+        </div>
+    );
 }

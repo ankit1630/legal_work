@@ -134,45 +134,48 @@ export const Ingestion = () => {
     const allowedFileType = ingestionType === "file" ? ".pdf,.doc,.docx,.txt,.ppt,.pptx,.xls,.xlsx,.json,.csv,.html" : ".zip";
 
     return (
-        <Card className='ingestion-container'>
-            <CardHeader className='ingestion-container-header' title="File & Folder Ingestion" />
-            <CardContent>
-                Description of Ingestion
-            </CardContent>
-            <CardActions>
-                <Button onClick={handleIngestFile}>Ingest File</Button>
-                <Button onClick={handleIngestFolder}>Ingest Folder (only .zip)</Button>
-            </CardActions>
-            <Dialog
-                open={ingestionModalIsOpen}
-                onClose={handleClose}
-                maxWidth='md'
-            >
-                <DialogTitle>Upload {ingestionType} {errorMsgEl}</DialogTitle>
-                <DialogContent style={{ width: '600px' }}>
-                <Button
-                    component="label"
-                    role={undefined}
-                    variant="contained"
-                    tabIndex={-1}
-                    startIcon={<CloudUploadIcon />}
-                    disabled={fileIsUploading}
+        <div className='ingestion-section'>
+            <h3>Ingestion</h3>
+            <Card className='ingestion-container'>
+                <CardHeader className='ingestion-container-header' title="File & Folder Ingestion" />
+                <CardContent>
+                    Description of Ingestion
+                </CardContent>
+                <CardActions>
+                    <Button onClick={handleIngestFile}>Ingest File</Button>
+                    <Button onClick={handleIngestFolder}>Ingest Folder (only .zip)</Button>
+                </CardActions>
+                <Dialog
+                    open={ingestionModalIsOpen}
+                    onClose={handleClose}
+                    maxWidth='md'
                 >
-                    {selectedFileEl}
-                    <VisuallyHiddenInput type="file" onChange={handleFileOrFolderChange} accept={allowedFileType} />
-                </Button>
-                </DialogContent>
-                <DialogActions>
-                    <Button variant="oulined" onClick={handleClose} disabled={fileIsUploading}>Cancel</Button>
-                    <Button 
-                        variant='contained' 
-                        onClick={handleUploadFileOrFolder} 
-                        disabled={!fileOrFolderIsSelected || fileIsUploading}
+                    <DialogTitle>Upload {ingestionType} {errorMsgEl}</DialogTitle>
+                    <DialogContent style={{ width: '600px' }}>
+                    <Button
+                        component="label"
+                        role={undefined}
+                        variant="contained"
+                        tabIndex={-1}
+                        startIcon={<CloudUploadIcon />}
+                        disabled={fileIsUploading}
                     >
-                        Upload
+                        {selectedFileEl}
+                        <VisuallyHiddenInput type="file" onChange={handleFileOrFolderChange} accept={allowedFileType} />
                     </Button>
-                </DialogActions>
-            </Dialog>
-        </Card>
-    )
+                    </DialogContent>
+                    <DialogActions>
+                        <Button variant="oulined" onClick={handleClose} disabled={fileIsUploading}>Cancel</Button>
+                        <Button 
+                            variant='contained' 
+                            onClick={handleUploadFileOrFolder} 
+                            disabled={!fileOrFolderIsSelected || fileIsUploading}
+                        >
+                            Upload
+                        </Button>
+                    </DialogActions>
+                </Dialog>
+            </Card>
+        </div>
+    );
 }

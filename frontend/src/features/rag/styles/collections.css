@@ -1,7 +1,6 @@
 .collections-conatainer {
     display: flex;
     justify-content: space-between;
-    margin-top: 40px;
 }
 
 .collections-option {
@@ -16,4 +15,24 @@
 
 .collections-option-delete {
     cursor: pointer;
+}
+
+.collection-section {
+    text-align: justify;
+    margin: 20px;
+    margin-top: 80px;
+}
+.collection-card {
+    text-align: justify;
+    box-shadow: 0px 2px 14px rgba(58, 57, 68, 0.2);
+}
+
+.collection-card-content {
+    display: flex;
+    align-items: end;
+}
+
+.collections {
+    flex-basis: 70%;
+    margin-left: 100px;
 }

@@ -50,3 +50,9 @@ pre {
     white-space: pre-wrap;
     word-wrap: break-word;
 }
+
+.query-section {
+    text-align: justify;
+    margin: 20px;
+    margin-top: 80px;
+}

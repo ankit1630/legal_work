@@ -1,5 +1,5 @@
 .deletion-container {
-    margin-top: 80px;
+    /* margin-top: 80px; */
 }
 
 .deletion-container-header {
@@ -13,4 +13,10 @@
 
 .deletion-list-item:hover {
     background-color: aliceblue;
+}
+
+.deletion-section {
+    text-align: justify;
+    margin: 20px;
+    margin-top: 80px;
 }

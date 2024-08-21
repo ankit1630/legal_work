@@ -1,5 +1,5 @@
 .ingestion-container {
-    margin-top: 80px;
+    /* margin-top: 80px; */
 }
 
 .ingestion-container-header {
@@ -8,4 +8,9 @@
 }
 .ingestion-file-upload-error {
     color: red;
+}
+.ingestion-section {
+    text-align: justify;
+    margin: 20px;
+    margin-top: 80px;
 }

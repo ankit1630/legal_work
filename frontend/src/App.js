@@ -80,7 +80,7 @@ function App() {
   };
 
   const { isUserLoggedIn } = appState;
-  const componentToRender = isUserLoggedIn ? _renderDashboard() : <Login onUserLogin={_handleUserLogin} />
+  const componentToRender = !isUserLoggedIn ? _renderDashboard() : <Login onUserLogin={_handleUserLogin} />
 
   if (!compIsReady) return null;
 

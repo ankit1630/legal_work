@@ -132,27 +132,30 @@ export const Deletion = () => {
     }
 
     return (
-        <Card className='deletion-container'>
-            <CardHeader className='deletion-container-header' title="File & Folder Deletion" />
-            <CardContent>
-                Description of Deletion
-            </CardContent>
-            <CardActions>
-                <Button onClick={handleFileDeletion}>Delete File</Button>
-                <Button onClick={handleFolderDeletion}>Delete Folder</Button>
-            </CardActions>
-            <Dialog
-                open={deletionModalState}
-                onClose={handleClose}
-                maxWidth='md'
-                
-            >
-                <DialogTitle>Delete {deletionType} {errorMsgEl}</DialogTitle>
-                <DialogContent style={{ width: '600px' }}>{cardContentEl}</DialogContent>
-                <DialogActions>
-                    <Button variant="contained" onClick={handleClose}>Close</Button>
-                </DialogActions>
-            </Dialog>
-        </Card>
+        <div className='deletion-section'>
+            <h3>Deletion</h3>
+            <Card className='deletion-container'>
+                <CardHeader className='deletion-container-header' title="File & Folder Deletion" />
+                <CardContent>
+                    Description of Deletion
+                </CardContent>
+                <CardActions>
+                    <Button onClick={handleFileDeletion}>Delete File</Button>
+                    <Button onClick={handleFolderDeletion}>Delete Folder</Button>
+                </CardActions>
+                <Dialog
+                    open={deletionModalState}
+                    onClose={handleClose}
+                    maxWidth='md'
+                    
+                >
+                    <DialogTitle>Delete {deletionType} {errorMsgEl}</DialogTitle>
+                    <DialogContent style={{ width: '600px' }}>{cardContentEl}</DialogContent>
+                    <DialogActions>
+                        <Button variant="contained" onClick={handleClose}>Close</Button>
+                    </DialogActions>
+                </Dialog>
+            </Card>
+        </div>
     )
 }
