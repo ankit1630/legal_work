@@ -18,6 +18,7 @@ import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import './styles/ingestion.css';
 import { selectIngestionModalState, updateIngestionModalState } from './ingestionSlice';
 import { styled } from '@mui/material/styles';
+import { selectMasterJson } from './masterJsonSlice';
 
 
 const VisuallyHiddenInput = styled('input')({
@@ -34,6 +35,7 @@ const VisuallyHiddenInput = styled('input')({
 
 export const Ingestion = () => {
     const selectedCollection = useSelector(selectSelectedCollection);
+    const selectedMasterJson = useSelector(selectMasterJson);
     const { ingestionModalIsOpen, ingestionType } = useSelector(selectIngestionModalState);
     const [selectedFile, setSelectedFile] = useState(null);
     const [fileOrFolderIsSelected, setFileOrFolderIsSelected] = useState(false);

@@ -11,15 +11,16 @@ import { Ingestion } from './ingestion';
 import { Deletion } from './deletion';
 import { Query } from './query';
 import { Model } from './model';
+import { MasterJson } from './masterJson';
 
 export function Rag(props) {
     const selectedModel = useSelector(selectModel);
-    const selectedSubModel = useSelector(selectSubModel)
 
     return (
         <Container className={props.className}>
             <Model />
             <Collections model={selectedModel?.label} />
+            <MasterJson />
             <Ingestion />
             <Deletion />
             <Query />

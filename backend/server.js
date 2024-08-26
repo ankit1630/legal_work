@@ -1,6 +1,7 @@
 const express = require("express");
 const bodyParser = require('body-parser');
 const loginRoutes = require("./api/login");
+const appRoutes = require("./api/appRoutes");
 
 const PORT = process.env.PORT || 3001;
 const app = express();
@@ -12,6 +13,7 @@ app.use(bodyParser.json({ extended: true}));
 
 // login routes
 app.use("/api/login", loginRoutes);
+app.use("/api", appRoutes);
 
 // not matched with any routes, send 404
 app.use((req, res) => {

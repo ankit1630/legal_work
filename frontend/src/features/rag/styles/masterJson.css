@@ -1,0 +1,20 @@
+.master-json-section {
+    flex-basis: 30%;
+    text-align: justify;
+    margin: 20px;
+    margin-top: 80px;
+}
+.master-json-card {
+    text-align: justify;
+    box-shadow: 0px 2px 14px rgba(58, 57, 68, 0.2);
+}
+
+.master-json-card-content {
+    display: flex;
+    align-items: end;
+}
+
+.master-jsons {
+    flex-basis: 70%;
+    margin-left: 100px;
+}

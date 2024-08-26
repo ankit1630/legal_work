@@ -6,16 +6,14 @@ import { Autocomplete, Card, CardContent, TextField, Typography } from "@mui/mat
 
 import "./styles/model.css";
 
-const MODELS = [{label: "Model_1"}, {label: "Model_2"}, {label: "Model_3"}]
+const MODELS = [{label: "OpenAi", id: "openai"}]
 const SUB_MODELS = {
-    "Model_1": [{label: "SubModel_11"}, {label: "SubModel_12"}, {label: "SubModel_13"}],
-    "Model_2": [{label: "SubModel_21"}, {label: "SubModel_22"}, {label: "SubModel_23"}],
-    "Model_3": [{label: "SubModel_31"}, {label: "SubModel_32"}, {label: "SubModel_33"}]
+    "openai": [{label: "GPT 4"}]
 };
 
 export const Model = () => {
     const selectedModel = useSelector(selectModel);
-    const selectedSubModel = useSelector(selectSubModel);
+    // const selectedSubModel = useSelector(selectSubModel);
     const dispatch = useDispatch();
 
     const handleModelChange = (ev, selectedValue) => {
@@ -24,24 +22,24 @@ export const Model = () => {
         }));
     };
 
-    const handleSubModelChange = (Ev, selectedValue) => {
-        dispatch(changeSubModel({
-            subModel: selectedValue
-        }));
-    }
+    // const handleSubModelChange = (Ev, selectedValue) => {
+    //     dispatch(changeSubModel({
+    //         subModel: selectedValue
+    //     }));
+    // }
 
-    const subModelEl = selectedModel ? (
-        <div className="sub-models">
-            <Autocomplete
-                disablePortal
-                options={SUB_MODELS[selectedModel.label]}
-                sx={{ width: 300 }}
-                value={selectedSubModel}
-                onChange={handleSubModelChange}
-                renderInput={(params) => <TextField {...params} label="Sub-Models" />}
-            />
-        </div>
-    ) : null;
+    // const subModelEl = selectedModel ? (
+    //     <div className="sub-models">
+    //         <Autocomplete
+    //             disablePortal
+    //             options={SUB_MODELS[selectedModel.label]}
+    //             sx={{ width: 300 }}
+    //             value={selectedSubModel}
+    //             onChange={handleSubModelChange}
+    //             renderInput={(params) => <TextField {...params} label="Sub-Models" />}
+    //         />
+    //     </div>
+    // ) : null;
 
     return (
         <div className="model-section">

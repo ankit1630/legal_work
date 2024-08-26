@@ -18,6 +18,10 @@ import { Card, CardContent, Typography } from "@mui/material";
 
 import './styles/collections.css';
 
+const formatCollection = (collections) => {
+    return collections.map((collection) => ({label: collection.name, id: collection.id}));
+}
+
 export const Collections = (props) => {
     const [inputValue, setInputValue] = React.useState('');
     const [createCollectionDialog, setCreateCollectionModelValue] = React.useState({
@@ -32,12 +36,25 @@ export const Collections = (props) => {
 
     useEffect(() => {
         const fetchCollections = async () => {
+            console.log("fbdf")
+            const storedUserInfo = JSON.parse(localStorage.getItem('userInfo') || "{}");
+            if (!storedUserInfo?.useremail) {
+                console.log("No user found");
+            }
+
             try {
-                const response = await axios.post("api/get_all_collections", {
-                    model_type: props.model
+                console.log({
+                    useremail: storedUserInfo.useremail,
+                    token: localStorage.getItem('token')
+                })
+                const response = await axios.get("api/get_collection", {
+                    params: {
+                        useremail: storedUserInfo.useremail,
+                        token: localStorage.getItem('token')
+                    }
                 });
 
-                dispatch(updateCollections(response.data));
+                dispatch(updateCollections(formatCollection(response.data)));
                 dispatch(onSelectCollection(""));
                 setFetchCollectionProgress(false);
             } catch (error) {
@@ -92,12 +109,14 @@ export const Collections = (props) => {
         // New collection -> New_Collection
         // xhr for creating collection
         // axios("https://abc.com/createCollection").then()
-        // const response = await axios.post("api/create_collection", {
-        //     model_type: props.model,
-        //     collection_name: createCollectionDialog.collectionName
-        // });
-        console.log( props.model);
-        dispatch(onCreateCollection(createCollectionDialog.collectionName  + "_" + props.model.toLowerCase()));
+        const storedUserInfo = JSON.parse(localStorage.getItem('userInfo') || "{}");
+        const response = await axios.post("api/create_collection", {
+            model: props.model,
+            collectionName: createCollectionDialog.collectionName,
+            token: localStorage.getItem('token'),
+            useremail: storedUserInfo.useremail
+        });
+        dispatch(onCreateCollection({id: response.data.id, label: createCollectionDialog.collectionName}));
         handleClose();
     }
 
@@ -111,9 +130,10 @@ export const Collections = (props) => {
     }
 
     const handleCollectionDelete = async (ev, collectionToDelete) => {
+        console.log(collectionToDelete);
         ev.stopPropagation();
 
-        const updatedCollections = collectionOptions.filter((collection) => collection !== collectionToDelete);
+        const updatedCollections = collectionOptions.filter((collection) => collection.id !== collectionToDelete);
 
         // const response = await axios.post("api/delete_collection", {
         //     collection_name: collectionToDelete
@@ -128,11 +148,11 @@ export const Collections = (props) => {
         }
     }
 
-    const renderCollectionOptions = (option) => {
+    const renderCollectionOptions = (option, val) => {
         return (
-            <div className='collections-option' key={option.key}  onClick={(ev) => handleCollectionSelection(ev, option.key)}>
+            <div className='collections-option' key={option.id}  onClick={(ev) => handleCollectionSelection(ev, val)}>
                 <div>{option.key}</div>
-                <div className='collections-option-delete' onClick={(ev) => handleCollectionDelete(ev, option.key)}><DeleteIcon /></div>
+                <div className='collections-option-delete' onClick={(ev) => handleCollectionDelete(ev, val.id)}><DeleteIcon /></div>
             </div>
         )
     };
@@ -159,7 +179,9 @@ export const Collections = (props) => {
                                 onChange={handleCollectionSelection}
                                 inputValue={inputValue}
                                 onInputChange={handleInputValueChange}
-                                renderInput={(params) => <TextField {...params} label="Collections" />}
+                                renderInput={(params) => {
+                                    return (<TextField {...params} label="Collections" />);
+                                }}
                                 renderOption={renderCollectionOptions}
                             />
                             <Button 
