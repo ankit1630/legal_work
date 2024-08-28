@@ -18,3 +18,15 @@
     flex-basis: 70%;
     margin-left: 100px;
 }
+
+.master-jsons-conatainer {
+    display: flex;
+    justify-content: space-between;
+}
+
+.master-json-creation {
+    text-align: center;
+    padding: 20px;
+    color: green;
+    font-weight: bold;
+}

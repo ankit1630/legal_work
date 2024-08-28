@@ -5,6 +5,7 @@ import { changeModel, changeSubModel, selectModel, selectSubModel} from './model
 import { Autocomplete, Card, CardContent, TextField, Typography } from "@mui/material";
 
 import "./styles/model.css";
+import { onSelectCollection } from "./ragSlice";
 
 const MODELS = [{label: "OpenAi", id: "openai"}]
 const SUB_MODELS = {
@@ -20,6 +21,10 @@ export const Model = () => {
         dispatch(changeModel({
             model: selectedValue
         }));
+
+        if (!selectedValue) {
+            dispatch(onSelectCollection(""));
+        }
     };
 
     // const handleSubModelChange = (Ev, selectedValue) => {

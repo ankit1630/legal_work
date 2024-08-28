@@ -42,7 +42,7 @@ router.post("/create_collection", async (req, res) => {
   // Create the request body
   const collectionData = JSON.stringify({
     model_type: model,
-    collection_name: collectionId,
+    collection_name: collectionId + "_" + model,
   });
 
   console.log(collectionData);
@@ -56,17 +56,12 @@ router.post("/create_collection", async (req, res) => {
       {
         headers: {
           "Content-Type": "application/json",
-        }
+        },
       }
     );
-    console.log("Response:", response.data);
   } catch (error) {
-    console.log("Error", error);
-    console.log("ererere");
-    res.status(500).send("ererere");
+    res.status(500).send({errorMsg: "Create collection error"});
   }
-
-  console.log(response);
 
   // create collection in node js sqlite
   const insertCollection = await dao.run(
@@ -78,6 +73,9 @@ router.post("/create_collection", async (req, res) => {
   res.status(201).send(insertCollection);
 });
 
+/**
+ * Get Collection
+ */
 router.get("/get_collection", async (req, res) => {
   console.log(req);
   const { useremail, token } = req.query;
@@ -100,6 +98,36 @@ router.get("/get_collection", async (req, res) => {
       return acc;
     }, [])
   );
+});
+
+/**
+ * Create Master Json
+ */
+router.post("/create_master_json_template", async (req, res) => {
+  const { useremail, token, collectionId, templateId } = req.body;
+
+  const templatePayload = JSON.stringify({
+    template_label: templateId,
+    collection_name: collectionId
+  });
+
+  let response;
+
+  try {
+    response = await axios.post(
+      "http://20.51.121.137:5000/api/create_master_json",
+      templatePayload,
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+  } catch (error) {
+    res.status(500).send({erroMsg: "template creation error"});
+  }
+
+  res.status(200).send("Template creation started successfully " + response.data);
 });
 
 module.exports = router;

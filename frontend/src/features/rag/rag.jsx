@@ -19,7 +19,7 @@ export function Rag(props) {
     return (
         <Container className={props.className}>
             <Model />
-            <Collections model={selectedModel?.label} />
+            <Collections model={selectedModel} />
             <MasterJson />
             <Ingestion />
             <Deletion />

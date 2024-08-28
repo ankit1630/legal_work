@@ -111,7 +111,7 @@ export const Collections = (props) => {
         // axios("https://abc.com/createCollection").then()
         const storedUserInfo = JSON.parse(localStorage.getItem('userInfo') || "{}");
         const response = await axios.post("api/create_collection", {
-            model: props.model,
+            model: props.model.id,
             collectionName: createCollectionDialog.collectionName,
             token: localStorage.getItem('token'),
             useremail: storedUserInfo.useremail
@@ -188,6 +188,7 @@ export const Collections = (props) => {
                                 variant="contained" 
                                 size="small"
                                 onClick={openCreateCollectionDialog}
+                                style={{width: "200px"}}
                             >
                                 Create Collection
                             </Button>
