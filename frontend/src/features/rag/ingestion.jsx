@@ -95,7 +95,7 @@ export const Ingestion = () => {
 
         formData.append("file", selectedFile);
         formData.append("model_type", model.id);
-        formData.append("collection_name", selectedCollection.id + "_" + model.id);
+        formData.append("collection_name", selectedCollection.id);
         formData.append('token', localStorage.getItem('token'));
         formData.append('useremail', storedUserInfo.useremail);
 

@@ -149,7 +149,7 @@ router.post("/upload_qdrant/:uploadType", async (req, res) => {
 
   formData.append("file", fileBlob, fileId);
   formData.append("model_type", model_type);
-  formData.append("collection_name", collection_name);
+  formData.append("collection_name", collection_name + '_' + model_type);
 
   try {
     response = await axios.post(
@@ -162,17 +162,67 @@ router.post("/upload_qdrant/:uploadType", async (req, res) => {
       }
     );
   } catch (error) {
-    console.log(error);
     res.status(500).send({ erroMsg: `Error in ${uploadType} upload` });
   }
 
   // create file name in sqlite
-  const insertCollection = await dao.run(
+  const insertedFile = await dao.run(
     `INSERT INTO ASSETS (id, name, collection, type) VALUES (?, ?, ?, ?)`,
     [fileId, fileName, collection_name, uploadType]
   );
 
-  res.status(201).send({msg: response.data, insertCollection});
+  res.status(201).send({ msg: response.data, insertedFile });
 });
 
+router.get("/get_assest", async (req, res) => {
+  const { collection_name, assestType, useremail, token } = req.query;
+  console.log(req.query);
+  const assestDetails = await dao.get(
+    `Select * FROM ASSETS where collection=? AND type=?`,
+    [collection_name, assestType]
+  );
+
+  res.status(200).send(assestDetails);
+});
+
+router.post("/delete_qdrant/:deleteType", async (req, res) => {
+  const deleteType = req.params.deleteType;
+  const { fileId, collection_name, useremail, token } = req.body;
+
+  const deletePayload = JSON.stringify({
+    filename: fileId,
+    collection_name: collection_name,
+  });
+
+  let response;
+
+  try {
+    response = await axios.post(
+      `http://20.51.121.137:5000/api/delete_${deleteType}`,
+      deletePayload,
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+  } catch (error) {
+    res.status(500).send({ erroMsg: "Error in deleting " + deleteType });
+  }
+
+  if (!response.data) {
+    res.status(500).send({ erroMsg: "Error in deleting " + deleteType });
+  }
+
+  // delete file details from node server
+  // DELETE FROM Customers WHERE CustomerName='Alfreds Futterkiste';
+
+  // create file name in sqlite
+  const deletedAssest = await dao.run(
+    `DELETE FROM ASSETS WHERE id=?`,
+    [fileId]
+  );
+
+  res.status(200).send({msg: "Deleted successfully " + response.data, deletedAssest});
+});
 module.exports = router;

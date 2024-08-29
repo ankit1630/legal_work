@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 
 import { useSelector, useDispatch } from 'react-redux';
 import { selectSelectedCollection } from './ragSlice';
+import { selectModel } from './modelSlice';
 
 import Card from '@mui/material/Card';
 import CardHeader from '@mui/material/CardHeader';
@@ -21,18 +22,25 @@ import './styles/deletion.css';
 import { List, ListItem, ListItemText } from '@mui/material';
 
 export const Deletion = () => {
+    const storedUserInfo = JSON.parse(localStorage.getItem('userInfo') || "{}");
     const selectedCollection = useSelector(selectSelectedCollection);
+    const model = useSelector(selectModel);
     const [deletionModalState, setDeletionModalState] = useState(false);
     const [deletionType, setDeletionType] = useState("");
     const [fileList, setFileList] = useState([]);
     const [fetchFileIsInProgress, setFetchFileProgress] = useState(false);
     const [fileDeleteInProgress, setFileDeleteProgress] = useState(false);
+    const [fileDeletionError, setFileDeletionError] = useState("");
 
     useEffect(() => {
-        const url = deletionType === "file" ? "api/get_all_filenames" : "api/get_all_folders"
         const fetchFilesorFolder = async () => {
-          const response = await axios.post(url, {
-            collection_name: selectedCollection
+          const response = await axios.get("api/get_assest", {
+            params: {
+                collection_name: selectedCollection.id,
+                token: localStorage.getItem('token'),
+                useremail: storedUserInfo.useremail,
+                assestType: deletionType
+            }
           });
           setFileList(response.data);
           setFetchFileProgress(false);
@@ -41,8 +49,9 @@ export const Deletion = () => {
         if (deletionType) {
             setFetchFileProgress(true);
             fetchFilesorFolder();
+            setFileDeletionError("");
         }
-    }, [deletionType, selectedCollection])
+    }, [deletionType, selectedCollection, storedUserInfo.useremail])
 
     if (!selectedCollection) {
         return null;
@@ -66,41 +75,32 @@ export const Deletion = () => {
         setDeletionType("");
     };
 
-    const onDeleteFile = async (fileOrFolderName) => {
+    const onDeleteFile = async (asset) => {
         if (fileDeleteInProgress) return;
 
-        console.log("deleting", fileOrFolderName);
         setFileDeleteProgress(true);
-        let url;
-        let data;
-
-        if (deletionType === "file") {
-            url = "api/delete_file";
-            data = { 
-                filename: fileOrFolderName,
-                collection_name: selectedCollection
-            };
-        } else {
-            url = "api/delete_folder";
-            data = { 
-                folder_name: fileOrFolderName,
-                collection_name: selectedCollection
-            };
+        const data = {
+            fileId: asset.id,
+            collection_name: asset.collection,
+            token: localStorage.getItem('token'),
+            useremail: storedUserInfo.useremail,
+            model_type: model.id
         }
+
         try {
-            // await new Promise((resolve) => setTimeout(resolve, 2000));
-            const response = await axios.post(url, data);
-            console.log("res", response);
+            const response = await axios.post(`api/delete_qdrant/${deletionType}`, data);
             if (!response.data) {
-                console.error(fileOrFolderName, " not deleted");
+                console.error(asset.name, " not deleted");
+                setFileDeletionError(asset.name + " not deleted")
             } else {
-                console.log(response.data);
-                setFileList(fileList.filter((file) => file !== fileOrFolderName));
+                setFileList(fileList.filter((file) => file.id !== asset.id));
+                setFileDeletionError("")
             }
             setFileDeleteProgress(false);
         } catch (error) {
-            console.error(error);
+            console.log(error)
             setFileDeleteProgress(false);
+            setFileDeletionError(asset.name + " not deleted")
         }
     }
 
@@ -108,16 +108,15 @@ export const Deletion = () => {
     const fileListItemEl = fileList.map((file) => {
         return (
             <ListItem 
-                key={file}
+                key={file.id}
                 className='deletion-list-item'
                 secondaryAction={
-                    <IconButton edge="end" aria-label="delete">
+                    <IconButton edge="end" aria-label="delete" onClick={() => onDeleteFile(file)}>
                       <DeleteIcon />
                     </IconButton>
                 }
-                onClick={() => onDeleteFile(file)}
             >
-                <ListItemText>{file}</ListItemText>
+                <ListItemText>{file.name}</ListItemText>
             </ListItem>
         );
     });
@@ -150,7 +149,10 @@ export const Deletion = () => {
                     
                 >
                     <DialogTitle>Delete {deletionType} {errorMsgEl}</DialogTitle>
-                    <DialogContent style={{ width: '600px' }}>{cardContentEl}</DialogContent>
+                    <DialogContent style={{ width: '600px' }}>
+                        {fileDeletionError ? <div className='file-deletion-error'>{fileDeletionError}</div> : null}
+                        {cardContentEl}
+                    </DialogContent>
                     <DialogActions>
                         <Button variant="contained" onClick={handleClose}>Close</Button>
                     </DialogActions>
