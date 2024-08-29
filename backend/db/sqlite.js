@@ -15,7 +15,7 @@ class DAO {
   // drop table
   dropTable() {
     console.log("Dropping table");
-    this.db.run('DROP TABLE if exists HELP_ARTICLE');
+    this.db.run('DROP TABLE if exists ASSETS');
   }
 
   createTable(sql) {

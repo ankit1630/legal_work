@@ -35,7 +35,6 @@ const VisuallyHiddenInput = styled('input')({
 
 export const Ingestion = () => {
     const selectedCollection = useSelector(selectSelectedCollection);
-    const selectedMasterJson = useSelector(selectMasterJson);
     const { ingestionModalIsOpen, ingestionType } = useSelector(selectIngestionModalState);
     const [selectedFile, setSelectedFile] = useState(null);
     const [fileOrFolderIsSelected, setFileOrFolderIsSelected] = useState(false);
@@ -90,18 +89,22 @@ export const Ingestion = () => {
             isError: false
         });
 
+        const storedUserInfo = JSON.parse(localStorage.getItem('userInfo') || "{}");
         const formData = new FormData();
-        console.log(typeof selectedFile, );
+
         formData.append("file", selectedFile);
-        formData.append("model_type", model);
-        formData.append("collection_name", selectedCollection);
+        formData.append("model_type", model.id);
+        formData.append("collection_name", selectedCollection.id + "_" + model.id);
+        formData.append('token', localStorage.getItem('token'));
+        formData.append('useremail', storedUserInfo.useremail);
+
+        console.log(formData);
 
         try {
             // await new Promise((resolve) => setTimeout(resolve, 2000));
-            const response = await axios.post(`/api/${ingestionType}_upload_qdrant`, formData, {
+            const response = await axios.post(`/api/upload_qdrant/${ingestionType}`, formData, {
               headers: {
-                "Content-Type": "multipart/form-data",
-                "Expect" : "100-continue"
+                "Content-Type": "multipart/form-data"
               }
             });
       

@@ -1,7 +1,8 @@
 const express = require("express");
 const router = express.Router();
 const axios = require("axios");
-
+const fileUpload = require("express-fileupload");
+router.use(fileUpload({ safeFileNames: true, preserveExtension: true }));
 // DAO
 const DAO = require("./../db/sqlite");
 const dao = new DAO();
@@ -42,10 +43,8 @@ router.post("/create_collection", async (req, res) => {
   // Create the request body
   const collectionData = JSON.stringify({
     model_type: model,
-    collection_name: collectionId + "_" + model,
+    collection_name: collectionId,
   });
-
-  console.log(collectionData);
 
   let response;
 
@@ -60,7 +59,7 @@ router.post("/create_collection", async (req, res) => {
       }
     );
   } catch (error) {
-    res.status(500).send({errorMsg: "Create collection error"});
+    res.status(500).send({ errorMsg: "Create collection error" });
   }
 
   // create collection in node js sqlite
@@ -69,7 +68,6 @@ router.post("/create_collection", async (req, res) => {
     [collectionId, collectionName, useremail]
   );
 
-  console.log(insertCollection);
   res.status(201).send(insertCollection);
 });
 
@@ -77,10 +75,7 @@ router.post("/create_collection", async (req, res) => {
  * Get Collection
  */
 router.get("/get_collection", async (req, res) => {
-  console.log(req);
   const { useremail, token } = req.query;
-
-  console.log(useremail);
 
   // fetch collections for given user
   const collectionDetails = await dao.get(
@@ -108,7 +103,7 @@ router.post("/create_master_json_template", async (req, res) => {
 
   const templatePayload = JSON.stringify({
     template_label: templateId,
-    collection_name: collectionId
+    collection_name: collectionId,
   });
 
   let response;
@@ -124,10 +119,49 @@ router.post("/create_master_json_template", async (req, res) => {
       }
     );
   } catch (error) {
-    res.status(500).send({erroMsg: "template creation error"});
+    res.status(500).send({ erroMsg: "template creation error" });
   }
 
-  res.status(200).send("Template creation started successfully " + response.data);
+  res
+    .status(200)
+    .send("Template creation started successfully " + response.data);
+});
+
+router.post("/upload_qdrant/:uploadType", async (req, res) => {
+  const uploadType = req.params.uploadType;
+  const { model_type, collection_name, useremail, token } = req.body;
+  const file = req.files.file;
+  const formData = new FormData();
+  const fileBlob = new Blob([file.data], { type: "application/pdf" });
+  const fileName = file.name;
+  const fileId = file.name + collection_name
+
+  formData.append("file", fileBlob, fileId);
+  formData.append("model_type", model_type);
+  formData.append("collection_name", collection_name);
+
+  try {
+    response = await axios.post(
+      `http://20.51.121.137:5000/api/${uploadType}_upload_qdrant`,
+      formData,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      }
+    );
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({ erroMsg: `Error in ${uploadType} upload` });
+  }
+
+  // create file name in sqlite
+  const insertCollection = await dao.run(
+    `INSERT INTO ASSETS (id, name, collection, type) VALUES (?, ?, ?, ?)`,
+    [fileId, fileName, collection_name, uploadType]
+  );
+
+  res.status(201).send({msg: response.data, insertCollection});
 });
 
 module.exports = router;

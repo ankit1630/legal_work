@@ -23,9 +23,19 @@ CREATE TABLE IF NOT EXISTS COLLECTIONS (
 );
 `;
 
+const CREATE_ASSET_FOLDER_TABLE = `
+CREATE TABLE IF NOT EXISTS ASSETS (
+  id TEXT PRIMARY KEY,
+  name TEXT NOT NULL,
+  collection TEXT NOT NULL,
+  type TEXT NOT NULL
+);
+`;
+
 // creating table, ONE TIME
 dao.createTable(CREATE_USER_TABLE);
 dao.createTable(CREATE_COLLECTION_TABLE);
+dao.createTable(CREATE_ASSET_FOLDER_TABLE);
 
 //verify token
 const verifyToken = (token) => {
