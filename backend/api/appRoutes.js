@@ -136,6 +136,17 @@ router.post("/upload_qdrant/:uploadType", async (req, res) => {
   const fileName = file.name;
   const fileId = collection_name + "_" + file.name;
 
+  const assestDetails = await dao.get(
+    `Select * FROM ASSETS where id=? AND type=?`,
+    [fileId, uploadType]
+  );
+
+  if (assestDetails.length) {
+    return res.status(400).send({
+      error_msg: "Assest already exist, Please upload different assest",
+    });
+  }
+
   formData.append("file", fileBlob, fileId);
   formData.append("model_type", model_type);
   formData.append("collection_name", collection_name);

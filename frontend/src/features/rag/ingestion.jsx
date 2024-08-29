@@ -41,9 +41,10 @@ export const Ingestion = () => {
     const [fileUploadStatus, setFileIsUploading] = useState({
         fileIsUploading: false,
         isSuccess: false,
-        isError: false
+        isError: false,
+        errorMsg: ""
     });
-    const {fileIsUploading, isSuccess, isError} = fileUploadStatus;
+    const {fileIsUploading, isSuccess, isError, errorMsg} = fileUploadStatus;
     const model = useSelector(selectModel);
     const dispatch = useDispatch();
 
@@ -122,10 +123,9 @@ export const Ingestion = () => {
             setFileIsUploading({
                 fileIsUploading: false,
                 isSuccess: false,
-                isError: true
+                isError: true,
+                errorMsg: error.response.data.error_msg
             });
-
-            console.error(error);
           }
     }
 
@@ -135,13 +135,17 @@ export const Ingestion = () => {
     }
 
     const selectedFileEl = selectedFile ? <div>{selectedFile.name}</div> : <div>Choose {ingestionType}</div>;
-    const errorMsgEl = isError ? <span className='ingestion-file-upload-error'>(Failed to upload file!!!)</span> : null;
+    const errorMsgEl = isError ? <span className='ingestion-file-upload-error'>({errorMsg})</span> : null;
     const allowedFileType = ingestionType === "file" ? ".pdf,.doc,.docx,.txt,.ppt,.pptx,.xls,.xlsx,.json,.csv,.html" : ".zip";
+    const fileUploadSuccessEl = fileUploadStatus.isSuccess ? <div className='ingestion-success'>
+        Request for {ingestionType} ingestion is added into the sqs queue, ocnce done you will get the confirmation notification
+    </div> : null;
 
     return (
         <div className='ingestion-section'>
             <h3>Ingestion</h3>
             <Card className='ingestion-container'>
+                {fileUploadSuccessEl}
                 <CardHeader className='ingestion-container-header' title="File & Folder Ingestion" />
                 <CardContent>
                     Description of Ingestion
