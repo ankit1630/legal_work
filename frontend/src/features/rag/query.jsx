@@ -21,6 +21,7 @@ import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 
 export const Query = () => {
+    const storedUserInfo = JSON.parse(localStorage.getItem('userInfo') || "{}");
     const selectedCollection = useSelector(selectSelectedCollection);
     const model = useSelector(selectModel);
     const [queryText, setQueryText] = useState("");
@@ -53,24 +54,26 @@ export const Query = () => {
             query: queryText,
             no_of_source: Number(sourceCount),
             user_prompt : queryPrompt,
-            model_type : model,
-            collection_name : selectedCollection,
+            model_type : model.id,
+            collection_name : selectedCollection.id + "_" + model.id,
             reset_memory: resetMemory,
-            search_type: searchType
+            search_type: searchType,
+            token: localStorage.getItem('token'),
+            useremail: storedUserInfo.useremail
         }
 
         setGetXhrStatus(true);
 
         try {
             // await new Promise((resolve) => setTimeout(resolve, 2000));
-            const response = await axios.post("api/get_relevant_docs", data);
+            const response = await axios.get("api/get_relevant_docs", {params: data});
             console.log(response.data);
             setResultIsAvailable(true);
             setResult(response.data);
         } catch (error) {
             console.error(error);
             setResultIsAvailable(true);
-            setResult("");
+            setResult("Error in fetchin relevant docs");
         }
 
         setGetXhrStatus(false);
@@ -81,17 +84,19 @@ export const Query = () => {
             query: queryText,
             no_of_source: Number(sourceCount),
             user_prompt : queryPrompt,
-            model_type : model,
-            collection_name : selectedCollection,
+            model_type : model.id,
+            collection_name : selectedCollection.id + "_" + model.id,
             reset_memory: resetMemory,
-            search_type: searchType
+            search_type: searchType,
+            token: localStorage.getItem('token'),
+            useremail: storedUserInfo.useremail
         }
 
         setGetXhrStatus(true);
 
         try {
             // await new Promise((resolve) => setTimeout(resolve, 2000));
-            const response = await axios.post("api/get_answer", data);
+            const response = await axios.get("api/get_answer", {params: data});
             console.log(response.data);
             setResultIsAvailable(true);
             setResult(response.data);

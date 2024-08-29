@@ -149,7 +149,7 @@ router.post("/upload_qdrant/:uploadType", async (req, res) => {
 
   formData.append("file", fileBlob, fileId);
   formData.append("model_type", model_type);
-  formData.append("collection_name", collection_name + '_' + model_type);
+  formData.append("collection_name", collection_name + "_" + model_type);
 
   try {
     response = await axios.post(
@@ -190,7 +190,7 @@ router.post("/delete_qdrant/:deleteType", async (req, res) => {
 
   const deletePayload = JSON.stringify({
     filename: fileId,
-    collection_name: collection_name + "_" + model_type
+    collection_name: collection_name + "_" + model_type,
   });
 
   let response;
@@ -219,11 +219,83 @@ router.post("/delete_qdrant/:deleteType", async (req, res) => {
   // DELETE FROM Customers WHERE CustomerName='Alfreds Futterkiste';
 
   // create file name in sqlite
-  const deletedAssest = await dao.run(
-    `DELETE FROM ASSETS WHERE id=?`,
-    [fileId]
-  );
+  const deletedAssest = await dao.run(`DELETE FROM ASSETS WHERE id=?`, [
+    fileId,
+  ]);
 
-  res.status(200).send({msg: "Deleted successfully " + response.data, deletedAssest});
+  res
+    .status(200)
+    .send({ msg: "Deleted successfully " + response.data, deletedAssest });
+});
+
+router.get("/get_relevant_docs", async (req, res) => {
+  const {
+    query,
+    no_of_source,
+    user_prompt,
+    model_type,
+    collection_name,
+    reset_memory,
+    search_type,
+    token,
+    useremail,
+  } = req.query;
+  let reponse;
+
+  try {
+    response = await axios.get(
+      "http://20.51.121.137:5000/api/get_relevant_docs",
+      {
+        query,
+        no_of_source,
+        user_prompt,
+        model_type,
+        collection_name,
+        reset_memory,
+        search_type,
+      }
+    );
+  } catch (error) {
+    res.status(500).send("Unable to find relevant docs");
+    return;
+  }
+
+  res.status(200).send(response.data);
+});
+
+router.get("/get_answer", async (req, res) => {
+  const {
+    query,
+    no_of_source,
+    user_prompt,
+    model_type,
+    collection_name,
+    reset_memory,
+    search_type,
+    token,
+    useremail,
+  } = req.query;
+  let reponse;
+
+  try {
+    response = await axios.get(
+      "http://20.51.121.137:5000/api/get_relevant_docs",
+      {
+        query,
+        no_of_source,
+        user_prompt,
+        model_type,
+        collection_name,
+        reset_memory,
+        search_type,
+      }
+    );
+  } catch (error) {
+    console.log(error);
+    res.status(500).send("Unable to get answer");
+    return;
+  }
+
+  res.status(200).send(response.data);
 });
 module.exports = router;
