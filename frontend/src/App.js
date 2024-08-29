@@ -1,57 +1,65 @@
-import React, { useEffect, useState } from 'react';
-import './App.css';
-import { Login } from './features/login';
-import { AppBar } from './features/appBar';
-import { Rag } from './features/rag/rag';
-import { Provider } from 'react-redux';
-import { store } from './app/store';
+import React, { useEffect, useState } from "react";
+import "./App.css";
+import { Login } from "./features/login";
+import { AppBar } from "./features/appBar";
+import { Rag } from "./features/rag/rag";
+import { Provider } from "react-redux";
+import { store } from "./app/store";
+import axios from "axios";
 
 function App() {
   const [appState, setAppState] = useState({
     isUserLoggedIn: false,
     userInfo: {
       name: "",
-      email: ""
-    }
+      email: "",
+    },
   });
   const [compIsReady, setCompIsReady] = useState(false);
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
-    const token = localStorage.getItem('token');
-    let storedUserInfo;
+    async function init() {
+      const token = localStorage.getItem("token");
+      let storedUserInfo;
 
-    try {
-      storedUserInfo = JSON.parse(localStorage.getItem('userInfo') || "{}");
-    } catch {
-      storedUserInfo = {};
+      try {
+        storedUserInfo = JSON.parse(localStorage.getItem("userInfo") || "{}");
+      } catch {
+        storedUserInfo = {};
+      }
+
+      const tokenValidationResponse = await axios.post("/", { token });
+
+      if (tokenValidationResponse.status === 200 && token && storedUserInfo?.username && storedUserInfo?.useremail) {
+        setAppState({
+          isUserLoggedIn: true,
+          userInfo: {
+            name: storedUserInfo.username,
+            email: storedUserInfo.useremail,
+          },
+        });
+      }
+
+      setCompIsReady(true);
     }
 
-    if (token && storedUserInfo?.username && storedUserInfo?.useremail) {
-      setAppState({
-        isUserLoggedIn: true,
-        userInfo: {
-          name: storedUserInfo.username,
-          email: storedUserInfo.useremail
-        }
-      });
-    }
-
-    setCompIsReady(true);
+    init();
   }, []);
 
   const _handleUserLogin = (token, username, useremail) => {
     localStorage.token = token;
     localStorage.userInfo = JSON.stringify({
       username,
-      useremail
+      useremail,
     });
 
     setAppState({
       isUserLoggedIn: true,
       userInfo: {
         name: username,
-        email: useremail
-      }
+        email: useremail,
+      },
     });
   };
 
@@ -63,32 +71,32 @@ function App() {
       isUserLoggedIn: false,
       userInfo: {
         name: "",
-        email: ""
-      }
-    })
+        email: "",
+      },
+    });
   };
 
   const _renderDashboard = () => {
     return (
-      <div className='app-dashboard'>
-        <AppBar userInfo={appState.userInfo} onUserLogout={_handleUserLogout}/>
+      <div className="app-dashboard">
+        <AppBar userInfo={appState.userInfo} onUserLogout={_handleUserLogout} />
         <Provider store={store}>
           <Rag className="app-body" />
         </Provider>
       </div>
-    )
+    );
   };
 
   const { isUserLoggedIn } = appState;
-  const componentToRender = isUserLoggedIn ? _renderDashboard() : <Login onUserLogin={_handleUserLogin} />
+  const componentToRender = isUserLoggedIn ? (
+    _renderDashboard()
+  ) : (
+    <Login onUserLogin={_handleUserLogin} />
+  );
 
   if (!compIsReady) return null;
 
-  return (
-    <div className="App">
-      {componentToRender}
-    </div>
-  );
+  return <div className="App">{componentToRender}</div>;
 }
 
 export default App;

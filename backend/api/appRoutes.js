@@ -100,6 +100,7 @@ router.get("/get_collection", async (req, res) => {
  */
 router.post("/create_master_json_template", async (req, res) => {
   const { useremail, token, collectionId, templateId } = req.body;
+  
 
   const templatePayload = JSON.stringify({
     template_label: templateId,
