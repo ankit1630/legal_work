@@ -134,7 +134,7 @@ router.post("/upload_qdrant/:uploadType", async (req, res) => {
   const formData = new FormData();
   const fileBlob = new Blob([file.data], { type: "application/pdf" });
   const fileName = file.name;
-  const fileId = file.name + collection_name
+  const fileId = collection_name + "_" + file.name;
 
   formData.append("file", fileBlob, fileId);
   formData.append("model_type", model_type);
