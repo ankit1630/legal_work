@@ -239,6 +239,7 @@ router.get("/get_relevant_docs", async (req, res) => {
     search_type,
     token,
     useremail,
+    template_label,
   } = req.query;
   let reponse;
 
@@ -253,6 +254,7 @@ router.get("/get_relevant_docs", async (req, res) => {
         collection_name,
         reset_memory,
         search_type,
+        template_label,
       }
     );
   } catch (error) {
@@ -274,6 +276,7 @@ router.get("/get_answer", async (req, res) => {
     search_type,
     token,
     useremail,
+    template_label,
   } = req.query;
   let reponse;
 
@@ -288,6 +291,7 @@ router.get("/get_answer", async (req, res) => {
         collection_name,
         reset_memory,
         search_type,
+        template_label,
       }
     );
   } catch (error) {

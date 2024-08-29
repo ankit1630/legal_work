@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { selectSelectedCollection } from './ragSlice';
 import { selectModel } from './modelSlice';
+import { selectMasterJson } from "./masterJsonSlice";
 
 import Card from '@mui/material/Card';
 import CardHeader from '@mui/material/CardHeader';
@@ -22,6 +23,7 @@ import Select from '@mui/material/Select';
 
 export const Query = () => {
     const storedUserInfo = JSON.parse(localStorage.getItem('userInfo') || "{}");
+    const selectedMasterJson = useSelector(selectMasterJson);
     const selectedCollection = useSelector(selectSelectedCollection);
     const model = useSelector(selectModel);
     const [queryText, setQueryText] = useState("");
@@ -59,7 +61,8 @@ export const Query = () => {
             reset_memory: resetMemory,
             search_type: searchType,
             token: localStorage.getItem('token'),
-            useremail: storedUserInfo.useremail
+            useremail: storedUserInfo.useremail,
+            template_label: selectedMasterJson.id
         }
 
         setGetXhrStatus(true);
@@ -73,7 +76,7 @@ export const Query = () => {
         } catch (error) {
             console.error(error);
             setResultIsAvailable(true);
-            setResult("Error in fetchin relevant docs");
+            setResult("Error in fetching relevant docs");
         }
 
         setGetXhrStatus(false);
@@ -89,7 +92,8 @@ export const Query = () => {
             reset_memory: resetMemory,
             search_type: searchType,
             token: localStorage.getItem('token'),
-            useremail: storedUserInfo.useremail
+            useremail: storedUserInfo.useremail,
+            template_label: selectedMasterJson.id
         }
 
         setGetXhrStatus(true);
