@@ -176,7 +176,6 @@ router.post("/upload_qdrant/:uploadType", async (req, res) => {
 
 router.get("/get_assest", async (req, res) => {
   const { collection_name, assestType, useremail, token } = req.query;
-  console.log(req.query);
   const assestDetails = await dao.get(
     `Select * FROM ASSETS where collection=? AND type=?`,
     [collection_name, assestType]
@@ -187,11 +186,11 @@ router.get("/get_assest", async (req, res) => {
 
 router.post("/delete_qdrant/:deleteType", async (req, res) => {
   const deleteType = req.params.deleteType;
-  const { fileId, collection_name, useremail, token } = req.body;
+  const { fileId, collection_name, useremail, token, model_type } = req.body;
 
   const deletePayload = JSON.stringify({
     filename: fileId,
-    collection_name: collection_name,
+    collection_name: collection_name + "_" + model_type
   });
 
   let response;
@@ -208,10 +207,12 @@ router.post("/delete_qdrant/:deleteType", async (req, res) => {
     );
   } catch (error) {
     res.status(500).send({ erroMsg: "Error in deleting " + deleteType });
+    return;
   }
 
   if (!response.data) {
     res.status(500).send({ erroMsg: "Error in deleting " + deleteType });
+    return;
   }
 
   // delete file details from node server
