@@ -60,6 +60,7 @@ router.post("/create_collection", async (req, res) => {
     );
   } catch (error) {
     res.status(500).send({ errorMsg: "Create collection error" });
+    return;
   }
 
   // create collection in node js sqlite
@@ -121,6 +122,7 @@ router.post("/create_master_json_template", async (req, res) => {
     );
   } catch (error) {
     res.status(500).send({ erroMsg: "template creation error" });
+    return;
   }
 
   res
@@ -164,6 +166,7 @@ router.post("/upload_qdrant/:uploadType", async (req, res) => {
     );
   } catch (error) {
     res.status(500).send({ erroMsg: `Error in ${uploadType} upload` });
+    return;
   }
 
   // create file name in sqlite
