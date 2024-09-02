@@ -29,7 +29,12 @@ function App() {
         storedUserInfo = {};
       }
 
-      const tokenValidationResponse = await axios.post("/", { token });
+      let tokenValidationResponse;
+      try {
+        tokenValidationResponse = await axios.post("/", { token });
+      } catch (error) {
+        tokenValidationResponse = error.response;
+      }
 
       if (tokenValidationResponse.status === 200 && token && storedUserInfo?.username && storedUserInfo?.useremail) {
         setAppState({
@@ -96,7 +101,11 @@ function App() {
 
   if (!compIsReady) return null;
 
-  return <div className="App">{componentToRender}</div>;
+  const fullHeightStyle = !isUserLoggedIn ? {
+    height: '100vh'
+  } : {};
+
+  return <div className="App" style={fullHeightStyle}>{componentToRender}</div>;
 }
 
 export default App;
