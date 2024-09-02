@@ -62,7 +62,7 @@ export const MasterJson = () => {
                 {creationMsgEl}
                 <CardContent className="master-json-card-content">
                     <Typography gutterBottom variant="h5" component="div"  style={{flexBasis: "30%"}}>
-                        <strong>Select a Master Json Template</strong>
+                        <strong>Select Json Template</strong>
                     </Typography>
                     <div className="master-jsons">
                         <div className="master-jsons-conatainer">

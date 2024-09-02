@@ -62,7 +62,7 @@ export const Query = () => {
             search_type: searchType,
             token: localStorage.getItem('token'),
             useremail: storedUserInfo.useremail,
-            template_label: selectedMasterJson.id
+            template_label: selectedMasterJson?.id || ""
         }
 
         setGetXhrStatus(true);
@@ -93,7 +93,7 @@ export const Query = () => {
             search_type: searchType,
             token: localStorage.getItem('token'),
             useremail: storedUserInfo.useremail,
-            template_label: selectedMasterJson.id
+            template_label: selectedMasterJson?.id || ""
         }
 
         setGetXhrStatus(true);

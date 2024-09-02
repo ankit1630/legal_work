@@ -138,7 +138,7 @@ export const Ingestion = () => {
     const errorMsgEl = isError ? <span className='ingestion-file-upload-error'>({errorMsg})</span> : null;
     const allowedFileType = ingestionType === "file" ? ".pdf,.doc,.docx,.txt,.ppt,.pptx,.xls,.xlsx,.json,.csv,.html" : ".zip";
     const fileUploadSuccessEl = fileUploadStatus.isSuccess ? <div className='ingestion-success'>
-        Request for {ingestionType} ingestion is added into the sqs queue, ocnce done you will get the confirmation notification
+        Request for {ingestionType} ingestion is added into the sqs queue, once done you will get the confirmation notification
     </div> : null;
 
     return (

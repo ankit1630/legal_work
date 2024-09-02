@@ -245,17 +245,23 @@ router.get("/get_relevant_docs", async (req, res) => {
   let reponse;
 
   try {
-    response = await axios.get(
+    const rel_doc_payload = {
+      query,
+      no_of_source,
+      user_prompt,
+      model_type,
+      collection_name,
+      reset_memory,
+      search_type,
+      template_label,
+    };
+    response = await axios.post(
       "http://20.51.121.137:5000/api/get_relevant_docs",
+      rel_doc_payload,
       {
-        query,
-        no_of_source,
-        user_prompt,
-        model_type,
-        collection_name,
-        reset_memory,
-        search_type,
-        template_label,
+        headers: {
+          "Content-Type": "application/json",
+        },
       }
     );
   } catch (error) {
@@ -281,18 +287,24 @@ router.get("/get_answer", async (req, res) => {
   } = req.query;
   let reponse;
 
+  const get_ans_body = {
+    query,
+    no_of_source,
+    user_prompt,
+    model_type,
+    collection_name,
+    reset_memory,
+    search_type,
+    template_label,
+  };
   try {
-    response = await axios.get(
-      "http://20.51.121.137:5000/api/get_relevant_docs",
+    response = await axios.post(
+      "http://20.51.121.137:5000/api/get_answer",
+      get_ans_body,
       {
-        query,
-        no_of_source,
-        user_prompt,
-        model_type,
-        collection_name,
-        reset_memory,
-        search_type,
-        template_label,
+        headers: {
+          "Content-Type": "application/json",
+        },
       }
     );
   } catch (error) {
