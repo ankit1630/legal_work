@@ -135,7 +135,7 @@ router.post("/upload_qdrant/:uploadType", async (req, res) => {
   const formData = new FormData();
   const fileBlob = new Blob([file.data], { type: "application/pdf" });
   const fileName = file.name;
-  const fileId = collection_name + "_" + file.name;
+  const fileId = file.name;
 
   const assestDetails = await dao.get(
     `Select * FROM ASSETS where id=? AND type=?`,
