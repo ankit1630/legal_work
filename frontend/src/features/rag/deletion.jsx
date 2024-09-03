@@ -68,10 +68,10 @@ export const Deletion = () => {
     }
 
     const handleClose = (ev, reason) => {
+        setFileList([]);
         if (reason === 'backdropClick' || reason === 'escapeKeyDown') return;
 
         setDeletionModalState(false);
-        setFileList([]);
         setDeletionType("");
     };
 

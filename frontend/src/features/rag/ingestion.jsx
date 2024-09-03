@@ -67,9 +67,9 @@ export const Ingestion = () => {
     }
 
     const handleClose = (ev, reason) => {
+        setSelectedFile(null);
         if (reason === 'backdropClick' || reason === 'escapeKeyDown') return;
 
-        setSelectedFile(null);
         setFileOrFolderIsSelected(false);
         setFileIsUploading({
             fileIsUploading: false,
@@ -108,12 +108,13 @@ export const Ingestion = () => {
                 "Content-Type": "multipart/form-data"
               }
             });
-      
+            
             setFileIsUploading({
                 fileIsUploading: false,
                 isSuccess: true,
                 isError: false
             });
+            setSelectedFile(null);
             console.log(response.data); // Do something with the response data
             dispatch(updateIngestionModalState({
                 ingestionModalIsOpen: false,
