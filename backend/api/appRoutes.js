@@ -96,7 +96,32 @@ router.get("/get_collection", async (req, res) => {
   );
 });
 
-router.post("/delete_collection", async () => {});
+router.post("/delete_collection", async (req, res) => {
+  const { collection_name, model_type } = req.body;
+  let response;
+
+  try {
+    response = await axios.post(
+      "http://20.51.121.137:5000/api/delete_collection",
+      { collection_name: collection_name + "_" + model_type },
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+  } catch (error) {
+    res.status(500).send({ errorMsg: "Delete collection error" });
+    return;
+  }
+
+  // delete collection from node db
+  let deletedCollection = await dao.run(`DELETE FROM COLLECTIONS WHERE id=?`, [
+    collection_name,
+  ]);
+
+  res.status(200).send("Collection deleted");
+});
 
 /**
  * Create Master Json
@@ -189,7 +214,8 @@ router.post("/upload_qdrant/:uploadType", async (req, res) => {
 });
 
 router.get("/get_assest", async (req, res) => {
-  const { collection_name, assestType, useremail, token, model_type } = req.query;
+  const { collection_name, assestType, useremail, token, model_type } =
+    req.query;
   // const assestDetails = await dao.get(
   //   `Select * FROM ASSETS where collection=? AND type=?`,
   //   [collection_name, assestType]
@@ -198,7 +224,7 @@ router.get("/get_assest", async (req, res) => {
   const urlEndpoint =
     assestType === "file" ? "get_all_filenames" : "get_all_folders";
   const payload = JSON.stringify({
-    collection_name: collection_name + '_' + model_type,
+    collection_name: collection_name + "_" + model_type,
   });
   console.log(urlEndpoint);
   try {

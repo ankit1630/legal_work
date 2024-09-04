@@ -131,20 +131,19 @@ export const Collections = (props) => {
 
     const handleCollectionDelete = async (ev, collectionToDelete) => {
         console.log(collectionToDelete);
-        ev.stopPropagation();
 
+        const response = await axios.post("api/delete_collection", {
+            collection_name: collectionToDelete,
+            model_type: props.model.id
+        });
         const updatedCollections = collectionOptions.filter((collection) => collection.id !== collectionToDelete);
-
-        // const response = await axios.post("api/delete_collection", {
-        //     collection_name: collectionToDelete
-        // });
-
+        console.log("vdf", updatedCollections);
         dispatch(updateCollections(updatedCollections));
-
-        console.log(collectionToDelete, selectedCollection);
-
+        console.log(collectionToDelete, selectedCollection, "fvdfb");
         if (collectionToDelete === selectedCollection) {
-            dispatch(onSelectCollection(""));
+            console.log("hello");
+            dispatch(onSelectCollection(null));
+            setInputValue("");
         }
     }
 
