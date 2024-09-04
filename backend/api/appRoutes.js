@@ -96,6 +96,8 @@ router.get("/get_collection", async (req, res) => {
   );
 });
 
+router.post("/delete_collection", async () => {});
+
 /**
  * Create Master Json
  */
@@ -187,7 +189,7 @@ router.post("/upload_qdrant/:uploadType", async (req, res) => {
 });
 
 router.get("/get_assest", async (req, res) => {
-  const { collection_name, assestType, useremail, token } = req.query;
+  const { collection_name, assestType, useremail, token, model_type } = req.query;
   // const assestDetails = await dao.get(
   //   `Select * FROM ASSETS where collection=? AND type=?`,
   //   [collection_name, assestType]
@@ -196,7 +198,7 @@ router.get("/get_assest", async (req, res) => {
   const urlEndpoint =
     assestType === "file" ? "get_all_filenames" : "get_all_folders";
   const payload = JSON.stringify({
-    collection_name: collection_name,
+    collection_name: collection_name + '_' + model_type,
   });
   console.log(urlEndpoint);
   try {
@@ -230,10 +232,19 @@ router.post("/delete_qdrant/:deleteType", async (req, res) => {
   const deleteType = req.params.deleteType;
   const { fileId, collection_name, useremail, token, model_type } = req.body;
 
-  const deletePayload = JSON.stringify({
-    filename: fileId,
-    collection_name: collection_name + "_" + model_type,
-  });
+  let deletePayload;
+
+  if (deleteType === "file") {
+    deletePayload = JSON.stringify({
+      filename: fileId,
+      collection_name: collection_name + "_" + model_type,
+    });
+  } else {
+    deletePayload = JSON.stringify({
+      folder_name: fileId,
+      collection_name: collection_name + "_" + model_type,
+    });
+  }
 
   let response;
 

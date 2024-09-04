@@ -36,7 +36,8 @@ export const Deletion = () => {
         const fetchFilesorFolder = async () => {
           const response = await axios.get("api/get_assest", {
             params: {
-                collection_name: selectedCollection.id + "_" + model.id,
+                collection_name: selectedCollection.id,
+                model_type: model.id,
                 token: localStorage.getItem('token'),
                 useremail: storedUserInfo.useremail,
                 assestType: deletionType
