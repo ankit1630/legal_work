@@ -99,8 +99,6 @@ export const Ingestion = () => {
         formData.append('token', localStorage.getItem('token'));
         formData.append('useremail', storedUserInfo.useremail);
 
-        console.log(formData);
-
         try {
             // await new Promise((resolve) => setTimeout(resolve, 2000));
             const response = await axios.post(`/api/upload_qdrant/${ingestionType}`, formData, {
